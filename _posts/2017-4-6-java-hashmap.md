@@ -45,7 +45,7 @@ Hash表格提供了`Map`接口的实现。这个实现提供了所有可选的ma
 
 **注意：这个实现不提供线程同步** 。如果多个线程同时访问hasp map，并且至少有一个线程在结构上修改了映射，那么它 *必须* 在外部进行同步。（结构修改是指添加或删除一个或者多个映射的任何操作；仅仅改变一个实例已经包含的Key对应的值不属于结构修改。）通常用对一些原生封装了这个map的对象进行同步来实现。如果不存在这种对象，这个map需要用`Collections.synchronizedMap`方法来进行包装。这最好在创建时完成，以防止不小心用非同步方式访问map：
 
-```
+```java
   Map m = Collections.synchronizedMap(new HashMap(...));
 ```
 
@@ -77,7 +77,7 @@ public class HashMap<K,V>
 
 HashMap有两种hash算法，两种算法切换的阀值是通过内嵌静态Holder类从jdk参数中读取。
 
-```
+```java
     private static class Holder {
 
         /**
@@ -125,7 +125,7 @@ HashMap的构造主要设置 *初始容量* 和 *负载因子*。
 
 HashMap使用数组保存数据，数组的长度必须是2的幂次。
 
-```
+```java
     /**
      * The table, resized as necessary. Length MUST Always be a power of two.
      */
@@ -134,7 +134,7 @@ HashMap使用数组保存数据，数组的长度必须是2的幂次。
 
 ### Hash算法
 
-```
+```java
     /**
      * Retrieve object hash code and applies a supplemental hash function to the
      * result hash, which defends against poor quality hash functions.  This is
@@ -164,7 +164,7 @@ HashMap使用数组保存数据，数组的长度必须是2的幂次。
 
 ### put方法
 
-```
+```java
     public V put(K key, V value) {
         if (table == EMPTY_TABLE) {
             inflateTable(threshold);
@@ -193,7 +193,7 @@ HashMap使用数组保存数据，数组的长度必须是2的幂次。
 
 ### get方法
 
-```
+```java
     final Entry<K,V> getEntry(Object key) {
         if (size == 0) {
             return null;
@@ -218,7 +218,7 @@ HashMap使用数组保存数据，数组的长度必须是2的幂次。
 
 当capacity大于table的大小时，进行resize。
 
-```
+```java
     void resize(int newCapacity) {
         Entry[] oldTable = table;
         int oldCapacity = oldTable.length;
