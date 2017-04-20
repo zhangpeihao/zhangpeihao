@@ -1,12 +1,12 @@
 
-##深入解析Docker背后的namespace技术
+## 深入解析Docker背后的namespace技术
 
 
 > 摘要：Docker基于mamespace、cgroups、chroot等技术来构建容器，不是一个系统调用就能搞定，容器是一个用户态的概念。本文中Docker软件工程师Michael Crosby深入探讨了Docker对namespace技术的应用。
 相信你在很多地方都看到过“Docker基于mamespace、cgroups、chroot等技术来构建容器”的说法，但你有没有想过为何容器的构建需要这些技术？ 为什么不是一个简单的系统调用就可以搞定？原因在于Linux内核中并不存在“linux container”这个概念，容器是一个用户态的概念。
 
 
-###Namespaces
+### Namespaces
 
 在第一部分，我会在文章中讨论Docker在使用Linux namespace时，如何创建Linux namespace。在之后的博客中我们会讨论namespace如何与其它特性如cgroups和隔离的文件系统相结合，去实现更多有用的功能。
 
@@ -29,7 +29,7 @@ CMD ["bash"]
 
 我会使用C语言来解释这个例子，因为它比Go语言更容易去解释底层的细节。 
 
-###NET Namespace
+### NET Namespace
 
 network namespaces为你的系统网络协议栈提供了自己的视图。这个协议栈包括你的本地主机（localhost）。确认你在目录crosbymichael/make-containers下，并运行 ip a查看所有运行在你的主机上的网络接口。 
 
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
 Docker使用新的network namespace启动一个veth接口，这样你的容器将拥有它自己的桥接ip地址，通常是docker0。接下来，我们不再继续讲述如何在namespace安装接口。相关内容将在另一篇文章中讲述。
 
-###MNT Namespace
+### MNT Namespace
 
 mount namespace可以让看到系统中所有挂载点在某个范围下的目录视图。人们经常把它和在chroot中禁锢进程混淆在一起，或者是认为他们是相似的，还有人说容器使用mount namespac来把进程禁锢在它的根文件系统中，这都是不对的！
 
@@ -192,7 +192,7 @@ none on /mytmp type tmpfs (rw,relatime)
 
 前面我说过mount namespace和filesystem jail是不同的，继续执行我们的./mount和 ls命令，就能给出证明了。
 
-###UTS Namespace
+### UTS Namespace
 
 UTS namespace（UNIX Timesharing System包含了运行内核的名称、版本、底层体系结构类型等信息）用于系统标识。包含了hostname 和域名domainname 。它使得一个容器拥有属于自己hostname标识，这个主机名标识独立于宿主机系统和其上的其他容器。让我们开始，拷贝 skeleton.c 然后借助他运行hostname 命令。
 
@@ -240,7 +240,7 @@ development
 IPC Namespace
 ```
 
-###IPC namespace
+### IPC namespace
 IPC namespace用于隔离进程间通信，像SysV的消息队列，让我们为这个命名空间创建一个skeleton.c的副本。 
 
 ```
@@ -347,7 +347,7 @@ drwxr-xr-x 1 nobody nogroup 4096 Nov 16 22:17 ..
 
 这是个很简单地例子，但是细想你会发现通过user namespace，可以以root权限在容器中运行（不是主机系统中的root）。不要忘记你可以随时更改 ls -la到bash中，并通过shell深入了解namespace。
 
-##总结
+## 总结
 
 本文中，我们回顾了mount，network，user，PID，UTS和IPC Linux namespace，并没有修改太多代码，只是增加了一些flag。复杂的工作集中在管理多个内核子系统的交互。就像我一开始提到的，namespace只是我们用来创建容器的一种工具，我希望PID的例子能使我们理解，是如何使多个namespace协同来创建容器的。
 
