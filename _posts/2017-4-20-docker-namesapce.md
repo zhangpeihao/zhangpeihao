@@ -2,7 +2,7 @@
 ## 深入解析Docker背后的namespace技术
 
 
-> 摘要：Docker基于mamespace、cgroups、chroot等技术来构建容器，不是一个系统调用就能搞定，容器是一个用户态的概念。本文中Docker软件工程师Michael Crosby深入探讨了Docker对namespace技术的应用。
+> 摘要：Docker基于namespace、cgroups、chroot等技术来构建容器，不是一个系统调用就能搞定，容器是一个用户态的概念。本文中Docker软件工程师Michael Crosby深入探讨了Docker对namespace技术的应用。
 相信你在很多地方都看到过“Docker基于mamespace、cgroups、chroot等技术来构建容器”的说法，但你有没有想过为何容器的构建需要这些技术？ 为什么不是一个简单的系统调用就可以搞定？原因在于Linux内核中并不存在“linux container”这个概念，容器是一个用户态的概念。
 
 
